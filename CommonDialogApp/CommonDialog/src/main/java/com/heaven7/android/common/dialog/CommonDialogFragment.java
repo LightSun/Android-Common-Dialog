@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -19,13 +20,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
 
@@ -64,9 +63,11 @@ public class CommonDialogFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(mCallback.isFullScreen()){
-            setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
+            setStyle(DialogFragment.STYLE_NORMAL, Build.VERSION.SDK_INT >= 21 ?
+                    android.R.style.Theme_Material_Light_NoActionBar_Fullscreen : android.R.style.Theme_Light_NoTitleBar_Fullscreen);
         }else {
-            setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Material_Dialog_NoActionBar);
+            setStyle(DialogFragment.STYLE_NO_TITLE, Build.VERSION.SDK_INT >= 21 ?
+                    android.R.style.Theme_Material_Dialog_NoActionBar : android.R.style.Theme_Light_NoTitleBar);
         }
         if (savedInstanceState != null) {
             mLayoutId = savedInstanceState.getInt(KEY_LAYOUT_ID);
@@ -138,7 +139,7 @@ public class CommonDialogFragment extends DialogFragment {
         mCallback.attachDialogFragment(this);
         CommonDialog dialog = new CommonDialog(getContext(), getTheme())
                 .callback(mCallback)
-                .withEnterAnimator(mCallback.isEnableAnim() ? mCallback.getEnterAnimator():null);
+                .withEnterAnimator(mCallback.isAnimationEnabled() ? mCallback.getEnterAnimator():null);
         //for execute animate in dialog.dismiss() have bugs. so can't execute animate in dialog. just in fragment
               //  .withExitAnimator(mCallback.getExitAnimator());
         dialog.setOnKeyListener(mCallback);
@@ -157,7 +158,7 @@ public class CommonDialogFragment extends DialogFragment {
             mCallback.beforeDismiss(dialog.getRealContentView());
         }
         View animateView = dialog.getAnimateView();
-        BaseAnimator mExitAnim = mCallback.isEnableAnim() ? mCallback.getExitAnimator(): null;
+        BaseAnimator mExitAnim = mCallback.isAnimationEnabled() ? mCallback.getExitAnimator(): null;
         if (animateView == null) {
             dismissInternal();
         }else{
@@ -246,7 +247,7 @@ public class CommonDialogFragment extends DialogFragment {
      */
     public static abstract class Callback extends CommonDialog.Callback implements DialogInterface.OnKeyListener{
 
-        private boolean enableAnim = true;
+        private boolean mAnimationEnabled = true;
         private WeakReference<CommonDialogFragment> mWeakDF;
 
         /**
@@ -256,38 +257,84 @@ public class CommonDialogFragment extends DialogFragment {
         /*public*/ void attachDialogFragment(CommonDialogFragment cdf){
             this.mWeakDF = new WeakReference<CommonDialogFragment>(cdf);
         }
+
+        /**
+         * get the activity which attach to dialog fragment
+         * @return the activity
+         */
         public FragmentActivity getActivity(){
             return getDialogFragment().getActivity();
         }
+
+        /**
+         * get resource
+         * @return the resource
+         */
         public Resources getResources(){
             return getActivity().getResources();
         }
+
+        /**
+         * get the dialog fragment
+         * @return the dialog fragment
+         */
         public CommonDialogFragment getDialogFragment(){
             return mWeakDF.get();
         }
 
-        public boolean isEnableAnim() {
-            return enableAnim;
-        }
-        public void setEnableAnim(boolean enableAnim) {
-            this.enableAnim = enableAnim;
+        /**
+         * indicate the animation is enabled or not
+          * @return true if animation enabled
+         */
+        public boolean isAnimationEnabled() {
+            return mAnimationEnabled;
         }
 
+        /**
+         * set animation enabled or not
+         * @param mAnimationEnabled true if enable
+         */
+        public void setAnimationEnabled(boolean mAnimationEnabled) {
+            this.mAnimationEnabled = mAnimationEnabled;
+        }
+
+        /**
+         * called on save instance state
+         * @param outState the out state
+         */
         protected void onSaveInstanceState(Bundle outState) {
 
         }
 
+        /**
+         * called on restore instance state
+         * @param savedInstanceState the saved state. may be null
+         */
         protected void onRestoreInstanceState(Bundle savedInstanceState) {
 
         }
+
+        /**
+         * called on dialog dismiss
+         * @param cdf the dialog fragment
+         * @param dialog the dialog interface
+         */
         protected void onDismiss(CommonDialogFragment cdf, DialogInterface dialog) {
 
         }
 
+        /**
+         * get the enter animator
+         * @return the enter animator. can be null
+         */
         @Nullable
         protected BaseAnimator getEnterAnimator(){
             return null;
         }
+        /**
+         * get the exit animator
+         * @return the exit animator. can be null
+         */
         @Nullable
         protected BaseAnimator getExitAnimator(){
             return null;
@@ -300,7 +347,6 @@ public class CommonDialogFragment extends DialogFragment {
                     return true;
                 }
                 Activity activity = getDialogFragment().getActivity();
-                //dispatch back to activity.
                 if(activity != null && activity.dispatchKeyEvent(event)){
                     return true;
                 }
@@ -308,24 +354,32 @@ public class CommonDialogFragment extends DialogFragment {
             return false;
         }
 
+        /**
+         * called on back pressed. this is called before activity callback.
+         * @return true handled back pressed.
+         */
         protected boolean onBackPressed() {
             return false;
         }
 
+        /**
+         * indicate the dialog will show as full screen or not.
+         * @return true if full screen. false otherwise. default is false.
+         */
         protected boolean isFullScreen(){
             return false;
         }
 
         /**
          * set the dialog, called when create the dialog
-         *
+         * you can see a sample {@linkplain SimpleDialogCallback}
          * @param dialog the dialog, often is an instance of {@link CommonDialog}.
          */
         public abstract void onSetDialog(Dialog dialog);
 
         /**
          * called on start which give a last chance to set Window.
-         *
+         * you can see a sample {@linkplain SimpleDialogCallback}
          * @param window the window from dialog
          * @param dm     the DisplayMetrics
          */
@@ -343,44 +397,12 @@ public class CommonDialogFragment extends DialogFragment {
 
     }
 
-    public abstract static class SimpleCallback extends Callback {
-
-        @Override
-        public void onSetWindow(Window window, DisplayMetrics dm) {
-            WindowManager.LayoutParams wlp = window.getAttributes();
-            wlp.width = dm.widthPixels * 4 / 5;
-            wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            wlp.gravity = Gravity.CENTER;
-            window.setAttributes(wlp);
-        }
-
-        @Override
-        public void onSetDialog(Dialog dialog) {
-            dialog.setCancelable(true);
-            dialog.setCanceledOnTouchOutside(true);
-        }
-
-        @Override
-        public void beforeDismiss(View view) {
-            // Logger.i(TAG, "beforeDismiss", "" + view);
-        }
-
-        @Override
-        public void afterShow(View view) {
-            //Logger.i(TAG, "afterShow", "" + view);
-        }
-
-        @Override
-        public void onBindData(Context context, View view, Bundle arguments, ActionProvider provider) {
-
-        }
-    }
-
     public static class Builder {
         private int layoutId;
         private boolean retain;
         private Callback callback;
         private Bundle args;
+        private CommonDialogFragment mCDF;
 
         public Builder layoutId(@LayoutRes int layoutId) {
             this.layoutId = layoutId;
@@ -396,13 +418,11 @@ public class CommonDialogFragment extends DialogFragment {
             this.callback = callback;
             return this;
         }
-
         public Builder arguments(Bundle args) {
             this.args = args;
             return this;
         }
-
-        private CommonDialogFragment build() {
+        public Builder build() {
             if (callback == null) {
                 throw new IllegalStateException("callback can't be null ! you must set callback first.");
             }
@@ -414,21 +434,12 @@ public class CommonDialogFragment extends DialogFragment {
             fragment.mLayoutId = layoutId;
             fragment.mCallback = callback;
             fragment.setArguments(args);
-            return fragment;
+            mCDF = fragment;
+            return this;
         }
-
-        public CommonDialogFragment show(FragmentManager fm, String tag) {
-            //final CommonDialogFragment mFragment = this.mFragment;
-            CommonDialogFragment fragment = build();
-            if (fragment == null) {
-                throw new IllegalStateException("you must call build() first");
-            }
-            fragment.show(fm, tag);
-            return fragment;
-        }
-
-        public CommonDialogFragment show(FragmentActivity activity, String tag) {
-            return show(activity.getSupportFragmentManager(), tag);
+        public CommonDialogFragment show(FragmentActivity activity, String tag){
+            mCDF.show(activity, tag);
+            return mCDF;
         }
     }
 

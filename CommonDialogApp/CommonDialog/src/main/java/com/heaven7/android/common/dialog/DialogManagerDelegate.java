@@ -7,29 +7,14 @@ import android.support.v4.app.FragmentActivity;
  */
 public interface DialogManagerDelegate{
 
+    /**
+     * show dialog of the dialog manager
+     * @param context the activity
+     */
     void show(FragmentActivity context);
 
+    /**
+     * dismiss dialog
+     */
     void dismiss();
-
-    abstract class SimpleDialogManager extends DialogFragmentHelper.DialogTranslateCallback implements DialogManagerDelegate {
-
-        private static final String TAG = "SimpleDialogManager";
-        private CommonDialogFragment mCdf;
-
-        @Override
-        public void show(FragmentActivity context) {
-            mCdf = new CommonDialogFragment.Builder()
-                    .layoutId(getLayoutId())
-                    .callback(this)
-                    .show(context, getClass().getSimpleName());
-        }
-        @Override
-        public void dismiss() {
-            if (mCdf != null && mCdf.isAdded()) {
-                mCdf.dismiss();
-                mCdf = null;
-            }
-        }
-        protected abstract int getLayoutId();
-    }
 }

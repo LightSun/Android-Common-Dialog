@@ -19,9 +19,16 @@ public abstract class BaseAnimator {
     private long mDuration = 250;
     private long delay;
 
+    /**
+     * called on set animation for animator
+     * @param set the set animators
+     * @param view the view to animate. often is content view of dialog
+     * @param constraintWidth the width
+     * @param constraintHeight the height
+     */
     public abstract void setAnimation(AnimatorSet set, View view, int constraintWidth, int constraintHeight);
 
-    protected void startImpl(final View view, int constraintWidth, int constraintHeight) {
+    private void startImpl(final View view, int constraintWidth, int constraintHeight) {
         reset(view);
         if (constraintWidth <= 0 || constraintHeight <= 0) {
             if (view.getMeasuredWidth() == 0) {

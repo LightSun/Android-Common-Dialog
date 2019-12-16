@@ -13,7 +13,7 @@ import android.view.WindowManager;
  * the fixed place(the left and top position ) horizontal dialog manager
  * Created by heaven7 on 2018/10/8 0008.
  */
-public abstract class FixedPlaceHorizontalDialogManager extends DialogManagerDelegate.SimpleDialogManager
+public abstract class FixedPlaceHorizontalDialogManager extends SimpleDialogManager
         implements LocationHelper.Callback {
 
     private final boolean mCanReceiveEventOut;
@@ -33,10 +33,14 @@ public abstract class FixedPlaceHorizontalDialogManager extends DialogManagerDel
     public void setLocationOffset(int mLocationOffset) {
         this.mLocationOffset = mLocationOffset;
     }
+
+    /**
+     * the retain space of left-right or top-bottom
+     * @param mRetainSpace the retain space
+     */
     public void setRetainSpace(int mRetainSpace) {
         this.mRetainSpace = mRetainSpace;
     }
-
     @Override
     public final void onBindData(Context context, View view, Bundle arguments, CommonDialogFragment.ActionProvider provider) {
         onBindDataImpl(context, view, arguments, provider);
@@ -74,7 +78,7 @@ public abstract class FixedPlaceHorizontalDialogManager extends DialogManagerDel
         wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         wlp.x = x;
         wlp.y = y;
-        wlp.gravity = Gravity.TOP | Gravity.LEFT;
+        wlp.gravity = Gravity.TOP | Gravity.START;
         if(dimAmount >= 0){
             wlp.dimAmount = dimAmount;
         }
@@ -94,9 +98,21 @@ public abstract class FixedPlaceHorizontalDialogManager extends DialogManagerDel
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * get the mark view which used to mark the horizontal dialog.
+     * @return the mark view
+     */
     protected View getMarkView(){
         return null;
     }
 
-    protected abstract void onBindDataImpl(Context context, View view, Bundle arguments, CommonDialogFragment.ActionProvider provider);
+    /**
+     * called on bind data
+     * @param context the context
+     * @param view the view
+     * @param arguments the arguments from dialog fragment
+     * @param provider the action provider
+     */
+    protected abstract void onBindDataImpl(Context context, View view, Bundle arguments,
+                                           CommonDialogFragment.ActionProvider provider);
 }
