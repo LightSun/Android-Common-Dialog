@@ -94,7 +94,7 @@ public abstract class FixedPlaceHorizontalDialogManager extends SimpleDialogMana
         this.y = y;
     }
     @Override
-    public void applyMarkMargin(int marginLeft) {
+    public void applyMarkMargin(View markView, int marginLeft) {
         throw new UnsupportedOperationException();
     }
 

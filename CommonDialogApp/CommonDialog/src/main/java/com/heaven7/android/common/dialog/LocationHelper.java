@@ -49,12 +49,7 @@ public class LocationHelper {
         this.markView = builder.markView;
         this.autoFitEdge = builder.autoFitEdge;
         this.callback = builder.callback;
-        init();
-    }
-
-    private void init() {
-        //get the activity
-        this.stateBarHeight = getStatusBarHeight(placeView.getContext());
+        this.stateBarHeight = builder.stateBarHeight;
     }
 
     public void applyVertical(View anchor){
@@ -120,6 +115,14 @@ public class LocationHelper {
         y += gravityOffset;
         int[] xy = fitEdge(x, y);
         callback.applyLocation(xy[0], xy[1]);
+
+        //markView: the indicator of placeView.
+        if(markView != null) {
+            int markHeight = markView.getMeasuredHeight();
+            //permit move
+            int marginTop = (cors[1] + height / 2) - (xy[1] + markHeight / 2);
+            callback.applyMarkMargin(markView, marginTop);
+        }
     }
 
     public void applyHorizontal(View anchor){
@@ -127,8 +130,10 @@ public class LocationHelper {
         int placeViewHeight = getPlaceViewHeight();
        // Logger.d("LocationHelper", "applyHorizontal", "placeViewWidth = " + placeViewWidth + " ,placeViewHeight = " + placeViewHeight);
 
+        //the anchor width and height
         int width = anchor.getMeasuredWidth();
         int height = anchor.getMeasuredHeight();
+        // the anchor locations on screen
         int[] cors = new int[2];
         anchor.getLocationOnScreen(cors);
         cors[1] -= stateBarHeight;
@@ -183,6 +188,7 @@ public class LocationHelper {
                 throw new UnsupportedOperationException("locate = " + locate);
         }
         x += gravityOffset;
+        //x, y is the dest center.
         int[] xy = fitEdge(x, y);
         callback.applyLocation(xy[0], xy[1]);
         //markView: the indicator of placeView.
@@ -190,9 +196,7 @@ public class LocationHelper {
             int mWidth = markView.getMeasuredWidth();
             //permit move
             int marginLeft = (cors[0] + width / 2) - (xy[0] + mWidth / 2);
-            if(marginLeft > 0){
-                callback.applyMarkMargin(marginLeft);
-            }
+            callback.applyMarkMargin(markView, marginLeft);
         }
     }
 
@@ -247,9 +251,22 @@ public class LocationHelper {
         return height;
     }
 
+    /**
+     * the callback of location
+     */
     public interface Callback{
+        /**
+         * apply location
+         * @param x the x. relative to left-top.
+         * @param y the y. relative to left-top.
+         */
         void applyLocation(int x, int y);
-        void applyMarkMargin(int marginLeft);
+        /**
+         * apply the margin of mark view
+         * @param markView the mark view
+         * @param margin the margin start(often be left) or top. may be negative
+         */
+        void applyMarkMargin(View markView, int margin);
     }
 
     //-------------------------------------------------
@@ -284,10 +301,6 @@ public class LocationHelper {
     public Callback getCallback() {
         return this.callback;
     }
-    /** get status bar height */
-    protected int getStatusBarHeight(Context context){
-        return 0;
-    }
 
     public static class Builder {
         /** the retain space of left/right/top/bottom */
@@ -301,6 +314,13 @@ public class LocationHelper {
         /** auto fit edge or not .*/
         private boolean autoFitEdge;
         private Callback callback;
+
+        private int stateBarHeight;
+
+        public Builder setStateBarHeight(int stateBarHeight){
+            this.stateBarHeight = stateBarHeight;
+            return this;
+        }
 
         public Builder setRetainSpace(int retainSpace) {
             this.retainSpace = retainSpace;
