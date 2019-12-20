@@ -42,8 +42,8 @@ public abstract class FixedPlaceHorizontalDialogManager extends SimpleDialogMana
         this.mRetainSpace = mRetainSpace;
     }
     @Override
-    public final void onBindData(Context context, View view, Bundle arguments, CommonDialogFragment.ActionProvider provider) {
-        onBindDataImpl(context, view, arguments, provider);
+    public final void onBindData(Context context, View view, Bundle arguments) {
+        onBindDataImpl(context, view, arguments);
         //locate
         view.measure(0, 0);
         new LocationHelper.Builder()
@@ -111,8 +111,6 @@ public abstract class FixedPlaceHorizontalDialogManager extends SimpleDialogMana
      * @param context the context
      * @param view the view
      * @param arguments the arguments from dialog fragment
-     * @param provider the action provider
      */
-    protected abstract void onBindDataImpl(Context context, View view, Bundle arguments,
-                                           CommonDialogFragment.ActionProvider provider);
+    protected abstract void onBindDataImpl(Context context, View view, Bundle arguments);
 }

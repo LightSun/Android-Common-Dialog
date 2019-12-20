@@ -31,7 +31,7 @@ public class CommonLoadingCallback extends CommonDialogFragment.Callback {
     }
 
     @Override
-    public void onBindData(Context context, View view, Bundle arguments, CommonDialogFragment.ActionProvider provider) {
+    public void onBindData(Context context, View view, Bundle arguments) {
 
     }
 }

@@ -17,13 +17,5 @@ public abstract class SimpleDialogManager extends AbstractTranslateDialogCallbac
                 .show(context, getClass().getSimpleName());
     }
 
-    @Override
-    public void dismiss() {
-        CommonDialogFragment cdf = getDialogFragment();
-        if (cdf != null) {
-            cdf.dismiss();
-        }
-    }
-
     protected abstract int getLayoutId();
 }

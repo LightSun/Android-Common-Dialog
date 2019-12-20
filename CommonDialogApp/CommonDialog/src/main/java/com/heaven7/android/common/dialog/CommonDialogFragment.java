@@ -84,12 +84,7 @@ public class CommonDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mCallback.onBindData(getContext(), view, getArguments(), new ActionProvider() {
-            @Override
-            public void dismissDialog() {
-                dismiss();
-            }
-        });
+        mCallback.onBindData(getContext(), view, getArguments());
     }
 
     @Override
@@ -229,19 +224,6 @@ public class CommonDialogFragment extends DialogFragment {
         }
         return fm;
     }
-
-    /**
-     * the action provider help we handle the dialog
-     */
-    public static abstract class ActionProvider {
-
-        /**
-         * dismiss the dialog. if you want to dismiss , please call this.
-         */
-        public abstract void dismissDialog();
-
-    }
-
     /**
      * the callback of CommonDialogFragment.
      */
@@ -258,6 +240,13 @@ public class CommonDialogFragment extends DialogFragment {
             this.mWeakDF = new WeakReference<CommonDialogFragment>(cdf);
         }
 
+        public void dismiss() {
+            CommonDialogFragment cdf = getDialogFragment();
+            if (cdf != null) {
+                cdf.dismiss();
+                mWeakDF.clear();
+            }
+        }
         /**
          * get the activity which attach to dialog fragment
          * @return the activity
@@ -275,7 +264,7 @@ public class CommonDialogFragment extends DialogFragment {
         }
 
         /**
-         * get the dialog fragment
+         * get the dialog fragment. if attached return a valid object. or else return null.
          * @return the dialog fragment
          */
         public CommonDialogFragment getDialogFragment(){
@@ -390,10 +379,9 @@ public class CommonDialogFragment extends DialogFragment {
          *
          * @param context   the context
          * @param view      the view of dialog.
-         * @param provider  the action provider . help we handle dialog .such as {@link ActionProvider#dismiss()}.
          * @param arguments the arguments which is set by calling {@link Fragment#setArguments(Bundle)}.
          */
-        public abstract void onBindData(Context context, View view, Bundle arguments, ActionProvider provider);
+        public abstract void onBindData(Context context, View view, Bundle arguments);
 
     }
 
