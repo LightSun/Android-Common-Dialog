@@ -24,4 +24,7 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
 
     implementation project(":CommonDialog")
+
+    implementation "com.jakewharton:butterknife:8.4.0"
+    annotationProcessor  "com.jakewharton:butterknife-compiler:8.4.0"
 }

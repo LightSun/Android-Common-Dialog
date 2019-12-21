@@ -11,15 +11,14 @@ import android.view.WindowManager;
  */
 public class LocationHelper {
 
+    public static final byte GRAVITY_CENTER  = 3;
     public static final byte GRAVITY_LEFT    = 1;
     public static final byte GRAVITY_RIGHT   = 2;
-    public static final byte GRAVITY_CENTER  = 3;
     public static final byte GRAVITY_TOP     = 4;
     public static final byte GRAVITY_BOTTOM  = 5;
 
     public static final byte LOCATE_TOP      = 11;
     public static final byte LOCATE_BOTTOM   = 12;
-
     public static final byte LOCATE_LEFT     = 13;
     public static final byte LOCATE_RIGHT    = 14;
 
@@ -155,7 +154,7 @@ public class LocationHelper {
                         break;
 
                     case GRAVITY_CENTER:
-                        x = cors[0] + width / 2 - placeViewWidth / 2;
+                        x = cors[0]  + (width - placeViewWidth) / 2;
                         y = cors[1] + locateOffset - placeViewHeight;
                         break;
                     default:
@@ -176,7 +175,7 @@ public class LocationHelper {
                         break;
 
                     case GRAVITY_CENTER:
-                        x = cors[0] + width / 2 - placeView.getMeasuredWidth() / 2;
+                        x = cors[0] + ( width - placeView.getMeasuredWidth()) / 2;
                         y = cors[1] + height + locateOffset;
                         break;
                     default:
