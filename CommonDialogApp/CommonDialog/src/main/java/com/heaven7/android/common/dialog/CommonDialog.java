@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.LayoutRes;
@@ -17,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 
 /**
@@ -62,7 +62,10 @@ public class CommonDialog extends Dialog {
     /**
      * the callback help we handle something.
      */
-    public static abstract class Callback {
+    public static abstract class Callback implements Serializable {
+
+        private static final long serialVersionUID = 1;
+
         /**
          * called in {@link Dialog#onAttachedToWindow()} or the onAnimationEnd of enter animation.
          *

@@ -36,7 +36,8 @@ import java.lang.ref.WeakReference;
 public class CommonDialogFragment extends DialogFragment {
 
     private static final String TAG = CommonDialogFragment.class.getSimpleName();
-    private static final String KEY_LAYOUT_ID = "h7:CommonDialogFragment:layout_id";
+    private static final String KEY_LAYOUT_ID = "h7:CDF:layout_id";
+    private static final String KEY_CALLBACK  = "h7:CDF:callback";
 
     private static final DisplayMetrics DM = new DisplayMetrics();
 
@@ -64,6 +65,7 @@ public class CommonDialogFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mLayoutId = savedInstanceState.getInt(KEY_LAYOUT_ID);
+            mCallback = (Callback) savedInstanceState.getSerializable(KEY_CALLBACK);
         }
         if(mCallback.isFullScreen()){
             setStyle(DialogFragment.STYLE_NORMAL, Build.VERSION.SDK_INT >= 21 ?
@@ -90,9 +92,10 @@ public class CommonDialogFragment extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_LAYOUT_ID, mLayoutId);
-
         mCallback.onSaveInstanceState(outState);
+
+        outState.putInt(KEY_LAYOUT_ID, mLayoutId);
+        outState.putSerializable(KEY_CALLBACK, mCallback);
     }
     /**
      * {@inheritDoc}
