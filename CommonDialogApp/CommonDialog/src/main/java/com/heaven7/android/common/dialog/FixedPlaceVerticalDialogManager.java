@@ -13,6 +13,9 @@ public abstract class FixedPlaceVerticalDialogManager extends FixedPlaceDialogMa
     public FixedPlaceVerticalDialogManager(LocationHelper.Builder builder, View anchor, boolean mCanReceiveEventOut, float dimAmount) {
         super(builder, anchor, mCanReceiveEventOut, dimAmount);
     }
+    public FixedPlaceVerticalDialogManager(LocationHelper.Builder builder, View anchor, float dimAmount) {
+        super(builder, anchor, dimAmount);
+    }
     public FixedPlaceVerticalDialogManager(LocationHelper.Builder builder, View anchor) {
         super(builder, anchor);
     }

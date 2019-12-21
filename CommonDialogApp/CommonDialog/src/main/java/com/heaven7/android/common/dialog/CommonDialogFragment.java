@@ -62,15 +62,15 @@ public class CommonDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mLayoutId = savedInstanceState.getInt(KEY_LAYOUT_ID);
+        }
         if(mCallback.isFullScreen()){
             setStyle(DialogFragment.STYLE_NORMAL, Build.VERSION.SDK_INT >= 21 ?
                     android.R.style.Theme_Material_Light_NoActionBar_Fullscreen : android.R.style.Theme_Light_NoTitleBar_Fullscreen);
         }else {
             setStyle(DialogFragment.STYLE_NO_TITLE, Build.VERSION.SDK_INT >= 21 ?
                     android.R.style.Theme_Material_Dialog_NoActionBar : android.R.style.Theme_Light_NoTitleBar);
-        }
-        if (savedInstanceState != null) {
-            mLayoutId = savedInstanceState.getInt(KEY_LAYOUT_ID);
         }
         mCallback.onRestoreInstanceState(savedInstanceState);
     }
@@ -300,7 +300,6 @@ public class CommonDialogFragment extends DialogFragment {
          * @param savedInstanceState the saved state. may be null
          */
         protected void onRestoreInstanceState(Bundle savedInstanceState) {
-
         }
 
         /**
@@ -309,7 +308,6 @@ public class CommonDialogFragment extends DialogFragment {
          * @param dialog the dialog interface
          */
         protected void onDismiss(CommonDialogFragment cdf, DialogInterface dialog) {
-
         }
 
         /**

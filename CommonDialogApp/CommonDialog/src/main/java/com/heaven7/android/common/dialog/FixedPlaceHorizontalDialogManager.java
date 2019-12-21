@@ -17,6 +17,10 @@ public abstract class FixedPlaceHorizontalDialogManager extends FixedPlaceDialog
         super(builder, anchor);
     }
 
+    public FixedPlaceHorizontalDialogManager(LocationHelper.Builder builder, View anchor, float dimAmount) {
+        super(builder, anchor, dimAmount);
+    }
+
     /**
      * get the mark view which used to mark the horizontal dialog.
      * @return the mark view
