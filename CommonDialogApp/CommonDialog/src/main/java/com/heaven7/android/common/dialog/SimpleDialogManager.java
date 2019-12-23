@@ -1,5 +1,6 @@
 package com.heaven7.android.common.dialog;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 /**
@@ -10,9 +11,15 @@ public abstract class SimpleDialogManager extends AbstractTranslateDialogCallbac
 
     @Override
     public void show(FragmentActivity context) {
+        show(context, null);
+    }
+
+    @Override
+    public void show(FragmentActivity context, Bundle argument) {
         new CommonDialogFragment.Builder()
                 .layoutId(getLayoutId())
                 .callback(this)
+                .arguments(argument)
                 .build()
                 .show(context, getClass().getSimpleName());
     }

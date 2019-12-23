@@ -1,5 +1,6 @@
 package com.heaven7.android.common.dialog;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 /**
@@ -12,6 +13,13 @@ public interface DialogManagerDelegate{
      * @param context the activity
      */
     void show(FragmentActivity context);
+
+    /**
+     * show dialog
+     * @param context the context
+     * @param argument the arguments
+     */
+    void show(FragmentActivity context, Bundle argument);
 
     /**
      * dismiss dialog
