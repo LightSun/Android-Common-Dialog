@@ -323,6 +323,7 @@ public class CommonDialogFragment extends DialogFragment {
         /**
          * indicate save state is enabled or not.
          * @return this
+         * @since 1.0.1
          */
         protected boolean isSaveStateEnabled(){
             return true;
