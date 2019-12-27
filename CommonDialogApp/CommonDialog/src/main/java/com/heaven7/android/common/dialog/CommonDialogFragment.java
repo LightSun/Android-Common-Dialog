@@ -74,7 +74,9 @@ public class CommonDialogFragment extends DialogFragment {
             setStyle(DialogFragment.STYLE_NO_TITLE, Build.VERSION.SDK_INT >= 21 ?
                     android.R.style.Theme_Material_Dialog_NoActionBar : android.R.style.Theme_Light_NoTitleBar);
         }
-        mCallback.onRestoreInstanceState(savedInstanceState);
+        if(mCallback.isSaveStateEnabled()){
+            mCallback.onRestoreInstanceState(savedInstanceState);
+        }
     }
 
     @Nullable
@@ -95,7 +97,9 @@ public class CommonDialogFragment extends DialogFragment {
         mCallback.onSaveInstanceState(outState);
 
         outState.putInt(KEY_LAYOUT_ID, mLayoutId);
-        outState.putSerializable(KEY_CALLBACK, mCallback);
+        if(mCallback.isSaveStateEnabled()){
+            outState.putSerializable(KEY_CALLBACK, mCallback);
+        }
     }
     /**
      * {@inheritDoc}
@@ -233,7 +237,7 @@ public class CommonDialogFragment extends DialogFragment {
     public static abstract class Callback extends CommonDialog.Callback implements DialogInterface.OnKeyListener{
 
         private boolean mAnimationEnabled = true;
-        private WeakReference<CommonDialogFragment> mWeakDF;
+        private transient WeakReference<CommonDialogFragment> mWeakDF;
 
         /**
          * called on create the dialog
@@ -271,6 +275,9 @@ public class CommonDialogFragment extends DialogFragment {
          * @return the dialog fragment
          */
         public CommonDialogFragment getDialogFragment(){
+            if(mWeakDF == null){
+                return null;
+            }
             return mWeakDF.get();
         }
 
@@ -313,6 +320,13 @@ public class CommonDialogFragment extends DialogFragment {
         protected void onDismiss(CommonDialogFragment cdf, DialogInterface dialog) {
         }
 
+        /**
+         * indicate save state is enabled or not.
+         * @return this
+         */
+        protected boolean isSaveStateEnabled(){
+            return true;
+        }
         /**
          * get the enter animator
          * @return the enter animator. can be null
