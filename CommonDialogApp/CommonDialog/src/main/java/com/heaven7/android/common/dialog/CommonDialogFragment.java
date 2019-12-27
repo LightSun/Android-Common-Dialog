@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -98,7 +99,11 @@ public class CommonDialogFragment extends DialogFragment {
 
         outState.putInt(KEY_LAYOUT_ID, mLayoutId);
         if(mCallback.isSaveStateEnabled()){
-            outState.putSerializable(KEY_CALLBACK, mCallback);
+            if(mCallback instanceof Parcelable){
+                outState.putParcelable(KEY_CALLBACK, (Parcelable)mCallback);
+            }else{
+                outState.putSerializable(KEY_CALLBACK, mCallback);
+            }
         }
     }
     /**
@@ -326,7 +331,7 @@ public class CommonDialogFragment extends DialogFragment {
          * @since 1.0.1
          */
         protected boolean isSaveStateEnabled(){
-            return true;
+            return false;
         }
         /**
          * get the enter animator
