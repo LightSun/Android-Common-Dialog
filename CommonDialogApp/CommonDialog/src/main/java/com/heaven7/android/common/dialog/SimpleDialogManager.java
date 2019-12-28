@@ -9,6 +9,12 @@ import android.support.v4.app.FragmentActivity;
  */
 public abstract class SimpleDialogManager extends AbstractTranslateDialogCallback implements DialogManagerDelegate {
 
+    public SimpleDialogManager() {
+    }
+    public SimpleDialogManager(boolean receiveEventOnOutSide, float dimAmount) {
+        super(receiveEventOnOutSide, dimAmount);
+    }
+
     @Override
     public void show(FragmentActivity context) {
         show(context, null);
