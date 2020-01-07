@@ -114,11 +114,17 @@ public class CommonDialogFragment extends DialogFragment {
      * {@link FragmentTransaction#add(Fragment, String) FragmentTransaction.add}.
      */
     public void show(FragmentActivity activity, String tag){
+        show(activity, null, tag);
+    }
+    public void show(FragmentActivity activity, FragmentManager fm, String tag){
+        if(fm == null){
+            fm = activity.getSupportFragmentManager();
+        }
         try {
-            show(activity.getSupportFragmentManager(), tag);
+            show(fm, tag);
         }catch (IllegalStateException e){
             //this exception often caused by show dialog onActivityResult
-            new DialogActivityCallback(activity, this, tag).register();
+            new DialogActivityCallback(activity, fm, this, tag).register();
         }
     }
     /**
@@ -448,6 +454,10 @@ public class CommonDialogFragment extends DialogFragment {
         }
         public CommonDialogFragment show(FragmentActivity activity, String tag){
             mCDF.show(activity, tag);
+            return mCDF;
+        }
+        public CommonDialogFragment show(FragmentActivity activity, FragmentManager fm, String tag){
+            mCDF.show(activity, fm, tag);
             return mCDF;
         }
     }

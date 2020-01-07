@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 
 /**
  * the dialog activity callback.
@@ -12,10 +13,11 @@ import android.support.v4.app.FragmentActivity;
 /*public*/ class DialogActivityCallback implements Application.ActivityLifecycleCallbacks {
 
     private FragmentActivity activity;
+    private FragmentManager fm;
     private CommonDialogFragment cdf;
     private String tag;
 
-    public DialogActivityCallback(FragmentActivity activity, CommonDialogFragment cdf, String tag) {
+    public DialogActivityCallback(FragmentActivity activity, FragmentManager fm, CommonDialogFragment cdf, String tag) {
         this.activity = activity;
         this.cdf = cdf;
         this.tag = tag;
@@ -39,7 +41,7 @@ import android.support.v4.app.FragmentActivity;
     public void onActivityResumed(Activity activity) {
          if(this.activity == activity){
              this.activity.getApplication().unregisterActivityLifecycleCallbacks(this);
-             cdf.show(this.activity, tag);
+             cdf.show(this.activity, fm, tag);
          }
     }
 

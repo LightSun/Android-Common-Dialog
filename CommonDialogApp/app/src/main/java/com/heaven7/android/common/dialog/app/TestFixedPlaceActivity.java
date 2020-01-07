@@ -9,7 +9,12 @@ import android.view.View;
 import com.heaven7.android.common.dialog.FixedPlaceHorizontalDialogManager;
 import com.heaven7.android.common.dialog.FixedPlaceVerticalDialogManager;
 import com.heaven7.android.common.dialog.LocationHelper;
+import com.heaven7.android.common.dialog.SimpleDialogManager;
 import com.heaven7.android.common.dialog.app.utils.CommonUtils;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,11 +24,23 @@ public class TestFixedPlaceActivity extends AppCompatActivity {
     @BindView(R.id.tv_anchor)
     View mAnchor;
 
+    private final LinkedList<SimpleDialogManager> mDialogs = new LinkedList<>();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_test_fix_place);
         ButterKnife.bind(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        SimpleDialogManager manager = mDialogs.pollLast();
+        if(manager != null){
+            manager.dismiss();
+        }else {
+            super.onBackPressed();
+        }
     }
 
     public void onClickFixHorizontal(View view) {
@@ -43,7 +60,8 @@ public class TestFixedPlaceActivity extends AppCompatActivity {
                     .setGravity(LocationHelper.GRAVITY_CENTER)
                     .setRetainSpace(30)
                     .setStateBarHeight(CommonUtils.getStatusBarHeight(getApplicationContext()))
-                    , mAnchor);
+                    , mAnchor, true, 0);
+            mDialogs.addLast(this);
         }
         @Override
         protected int getLayoutId() {
@@ -63,7 +81,8 @@ public class TestFixedPlaceActivity extends AppCompatActivity {
                             .setGravity(LocationHelper.GRAVITY_CENTER)
                             .setRetainSpace(30)
                             .setStateBarHeight(CommonUtils.getStatusBarHeight(getApplicationContext()))
-                    , mAnchor);
+                    , mAnchor, true, 0);
+            mDialogs.addLast(this);
         }
         @Override
         protected int getLayoutId() {
