@@ -26,11 +26,6 @@ public class CommonLoadingCallback extends CommonDialogFragment.Callback {
     }
 
     @Override
-    public void onSetWindow(Window window, DisplayMetrics dm) {
-
-    }
-
-    @Override
     public void onBindData(Context context, View view, Bundle arguments) {
 
     }

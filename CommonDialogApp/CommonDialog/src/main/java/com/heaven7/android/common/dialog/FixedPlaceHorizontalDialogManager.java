@@ -10,17 +10,9 @@ import android.view.View;
  */
 public abstract class FixedPlaceHorizontalDialogManager extends FixedPlaceDialogManager {
 
-    public FixedPlaceHorizontalDialogManager(LocationHelper.Builder builder, View anchor, boolean mCanReceiveEventOut, float dimAmount) {
-        super(builder, anchor, mCanReceiveEventOut, dimAmount);
-    }
     public FixedPlaceHorizontalDialogManager(LocationHelper.Builder builder, View anchor) {
         super(builder, anchor);
     }
-
-    public FixedPlaceHorizontalDialogManager(LocationHelper.Builder builder, View anchor, float dimAmount) {
-        super(builder, anchor, dimAmount);
-    }
-
     /**
      * get the mark view which used to mark the horizontal dialog.
      * @return the mark view

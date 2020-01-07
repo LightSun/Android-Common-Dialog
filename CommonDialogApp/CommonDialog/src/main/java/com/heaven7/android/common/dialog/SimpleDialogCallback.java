@@ -16,12 +16,12 @@ import android.view.WindowManager;
 public abstract class SimpleDialogCallback extends CommonDialogFragment.Callback {
 
     @Override
-    public void onSetWindow(Window window, DisplayMetrics dm) {
-        WindowManager.LayoutParams wlp = window.getAttributes();
-        wlp.width = dm.widthPixels * 4 / 5;
-        wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        wlp.gravity = Gravity.CENTER;
-        window.setAttributes(wlp);
+    protected int getWidth(DisplayMetrics dm) {
+        return dm.widthPixels * 4 / 5;
+    }
+    @Override
+    protected int getGravity() {
+        return Gravity.CENTER;
     }
 
     @Override

@@ -16,24 +16,15 @@ import android.view.WindowManager;
 public abstract class FixedPlaceDialogManager extends SimpleDialogManager
         implements LocationHelper.Callback {
 
-    private final boolean mCanReceiveEventOut;
-    private final float dimAmount; //-1 means default.
     private final LocationHelper.Builder builder;
     private final View anchor;
     private int x, y;
 
-    public FixedPlaceDialogManager(LocationHelper.Builder builder,View anchor, boolean mCanReceiveEventOut, float dimAmount) {
+    public FixedPlaceDialogManager(LocationHelper.Builder builder,View anchor) {
         this.builder = builder;
         this.anchor = anchor;
-        this.mCanReceiveEventOut = mCanReceiveEventOut;
-        this.dimAmount = dimAmount;
     }
-    public FixedPlaceDialogManager(LocationHelper.Builder builder,View anchor, float dimAmount) {
-       this(builder, anchor, false, dimAmount);
-    }
-    public FixedPlaceDialogManager(LocationHelper.Builder builder,View anchor){
-        this(builder, anchor, false, 0);
-    }
+
     @Override
     public final void onBindData(Context context, View view, Bundle arguments) {
         onBindDataImpl(context, view, arguments);
@@ -60,7 +51,7 @@ public abstract class FixedPlaceDialogManager extends SimpleDialogManager
 
     @Override
     public final void onSetWindow(Window window, DisplayMetrics dm) {
-        if(mCanReceiveEventOut) {
+        if(canActivityReceiveEventOnOutside()) {
             // Make us non-modal, so that others can receive touch events.
             window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
             // ...but notify us that it happened.
@@ -72,14 +63,10 @@ public abstract class FixedPlaceDialogManager extends SimpleDialogManager
         wlp.x = x;
         wlp.y = y;
         wlp.gravity = Gravity.TOP | Gravity.START;
-        if(dimAmount >= 0){
-            wlp.dimAmount = dimAmount;
+        if(getDimAmount() >= 0){
+            wlp.dimAmount = getDimAmount();
         }
         window.setAttributes(wlp);
-    }
-    @Override
-    public final boolean canActivityReceiveEventOnOutside() {
-        return mCanReceiveEventOut;
     }
     @Override
     public final void applyLocation(int x, int y) {

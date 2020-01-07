@@ -12,9 +12,7 @@ import com.heaven7.android.common.dialog.LocationHelper;
 import com.heaven7.android.common.dialog.SimpleDialogManager;
 import com.heaven7.android.common.dialog.app.utils.CommonUtils;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,12 +33,13 @@ public class TestFixedPlaceActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        SimpleDialogManager manager = mDialogs.pollLast();
+        /*SimpleDialogManager manager = mDialogs.pollLast();
         if(manager != null){
             manager.dismiss();
         }else {
             super.onBackPressed();
-        }
+        }*/
+        super.onBackPressed();
     }
 
     public void onClickFixHorizontal(View view) {
@@ -60,7 +59,9 @@ public class TestFixedPlaceActivity extends AppCompatActivity {
                     .setGravity(LocationHelper.GRAVITY_CENTER)
                     .setRetainSpace(30)
                     .setStateBarHeight(CommonUtils.getStatusBarHeight(getApplicationContext()))
-                    , mAnchor, true, 0);
+                    , mAnchor);
+            setCanActivityReceiveEventOnOutSide(true);
+            setDimAmount(0);
             mDialogs.addLast(this);
         }
         @Override
@@ -70,6 +71,12 @@ public class TestFixedPlaceActivity extends AppCompatActivity {
         @Override
         protected void onBindDataImpl(Context context, View view, Bundle arguments) {
 
+        }
+
+        @Override
+        protected boolean onBackPressed() {
+            dismiss();
+            return true;
         }
     }
     private class VerDialog extends FixedPlaceVerticalDialogManager {
@@ -81,7 +88,9 @@ public class TestFixedPlaceActivity extends AppCompatActivity {
                             .setGravity(LocationHelper.GRAVITY_CENTER)
                             .setRetainSpace(30)
                             .setStateBarHeight(CommonUtils.getStatusBarHeight(getApplicationContext()))
-                    , mAnchor, true, 0);
+                    , mAnchor);
+            setCanActivityReceiveEventOnOutSide(true);
+            setDimAmount(0);
             mDialogs.addLast(this);
         }
         @Override
@@ -91,6 +100,11 @@ public class TestFixedPlaceActivity extends AppCompatActivity {
         @Override
         protected void onBindDataImpl(Context context, View view, Bundle arguments) {
 
+        }
+        @Override
+        protected boolean onBackPressed() {
+            dismiss();
+            return true;
         }
     }
 }

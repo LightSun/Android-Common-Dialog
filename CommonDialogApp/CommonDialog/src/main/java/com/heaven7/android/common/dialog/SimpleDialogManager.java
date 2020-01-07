@@ -10,10 +10,8 @@ import android.support.v4.app.FragmentManager;
  */
 public abstract class SimpleDialogManager extends AbstractTranslateDialogCallback implements DialogManagerDelegate {
 
+
     public SimpleDialogManager() {
-    }
-    public SimpleDialogManager(boolean receiveEventOnOutSide, float dimAmount) {
-        super(receiveEventOnOutSide, dimAmount);
     }
 
     @Override

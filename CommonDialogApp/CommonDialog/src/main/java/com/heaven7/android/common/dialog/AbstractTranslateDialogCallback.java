@@ -20,21 +20,12 @@ import android.view.animation.AccelerateDecelerateInterpolator;
  */
 public abstract class AbstractTranslateDialogCallback extends CommonDialogFragment.Callback {
 
-    private final boolean receiveEventOnOutSide;
-    private final float dimAmount; //-1 means default
     protected DialogAnimateCallback enterAnimateCallback;
     protected DialogAnimateCallback exitAnimateCallback;
 
-
     public AbstractTranslateDialogCallback() {
-        this(false, -1);
-    }
 
-    public AbstractTranslateDialogCallback(boolean receiveEventOnOutSide, float dimAmount) {
-        this.receiveEventOnOutSide = receiveEventOnOutSide;
-        this.dimAmount = dimAmount;
     }
-
     public DialogAnimateCallback getEnterAnimateCallback() {
         return enterAnimateCallback;
     }
@@ -49,41 +40,6 @@ public abstract class AbstractTranslateDialogCallback extends CommonDialogFragme
 
     public void setExitAnimateCallback(DialogAnimateCallback exitAnimateCallback) {
         this.exitAnimateCallback = exitAnimateCallback;
-    }
-
-    @Override
-    public boolean canActivityReceiveEventOnOutside() {
-        return true;
-    }
-
-    protected int getWindowLayoutHeight(Context context) {
-        return WindowManager.LayoutParams.WRAP_CONTENT;
-    }
-
-    @Override
-    public void onSetWindow(Window window, DisplayMetrics dm) {
-        if (receiveEventOnOutSide) {
-            // Make us non-modal, so that others can receive touch events.
-            window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
-            // ...but notify us that it happened.
-            window.setFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
-        }
-        WindowManager.LayoutParams wlp = window.getAttributes();
-        wlp.width = getWidth(dm);
-        wlp.height = getWindowLayoutHeight(getActivity());
-        wlp.gravity = getGravity();
-        if (this.dimAmount >= 0) {
-            wlp.dimAmount = this.dimAmount; // default is 0.6f
-        }
-        window.setAttributes(wlp);
-    }
-
-    protected int getWidth(DisplayMetrics dm) {
-        return dm.widthPixels;
-    }
-
-    protected int getGravity() {
-        return Gravity.BOTTOM;
     }
 
     @Override

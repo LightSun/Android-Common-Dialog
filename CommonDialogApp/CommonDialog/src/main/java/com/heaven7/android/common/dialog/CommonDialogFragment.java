@@ -21,11 +21,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 
 import java.lang.ref.WeakReference;
 
@@ -116,6 +118,14 @@ public class CommonDialogFragment extends DialogFragment {
     public void show(FragmentActivity activity, String tag){
         show(activity, null, tag);
     }
+    /**
+     * {@inheritDoc}
+     * <p> if you call this from on activity result. please use handler to send a delay message to show. or else may cause bug.</p>
+     * @param activity The activity
+     * @param tag The tag for this fragment, as per
+     * {@link FragmentTransaction#add(Fragment, String) FragmentTransaction.add}.
+     * @since 1.0.2
+     */
     public void show(FragmentActivity activity, FragmentManager fm, String tag){
         if(fm == null){
             fm = activity.getSupportFragmentManager();
@@ -250,6 +260,45 @@ public class CommonDialogFragment extends DialogFragment {
         private boolean mAnimationEnabled = true;
         private transient WeakReference<CommonDialogFragment> mWeakDF;
 
+        private boolean canActivityReceiveEventOnOutSide;
+        private float dimAmount = -1;          //-1 means default
+
+        /**
+         * indicate can receive event out side or not
+         * @return true if can receive
+         * @since 1.0.2
+         */
+        public boolean canActivityReceiveEventOnOutSide() {
+            return canActivityReceiveEventOnOutSide;
+        }
+
+        /**
+         * set can activity receive event on out side or not
+         * @param canReceiveEventOnOutSide can activity receive on out side.
+         * @since 1.0.2
+         */
+        public void setCanActivityReceiveEventOnOutSide(boolean canReceiveEventOnOutSide) {
+            this.canActivityReceiveEventOnOutSide = canReceiveEventOnOutSide;
+        }
+        /**
+         * get dim amount .
+         * @return dim amount
+         * @since 1.0.2
+         * @see android.view.WindowManager.LayoutParams#dimAmount
+         */
+        public float getDimAmount() {
+            return dimAmount;
+        }
+        /**
+         * set dim amount .
+         * @param dimAmount the dim amount
+         * @since 1.0.2
+         * @see android.view.WindowManager.LayoutParams#dimAmount
+         */
+        public void setDimAmount(float dimAmount) {
+            this.dimAmount = dimAmount;
+        }
+
         /**
          * called on create the dialog
          * @param cdf the common dialog fragment.
@@ -264,6 +313,10 @@ public class CommonDialogFragment extends DialogFragment {
                 cdf.dismiss();
                 mWeakDF.clear();
             }
+        }
+        @Override
+        public final boolean canActivityReceiveEventOnOutside() {
+            return canActivityReceiveEventOnOutSide;
         }
         /**
          * get the activity which attach to dialog fragment
@@ -371,6 +424,56 @@ public class CommonDialogFragment extends DialogFragment {
         }
 
         /**
+         * get window layout height
+         * @param context the context
+         * @return the layout height
+         * @since 1.0.2
+         */
+        protected int getWindowLayoutHeight(Context context) {
+            return WindowManager.LayoutParams.WRAP_CONTENT;
+        }
+        /**
+         * get window layout width actually
+         * @param dm the display metrics
+         * @return the layout width
+         * @since 1.0.2
+         */
+        protected int getWidth(DisplayMetrics dm) {
+            return dm.widthPixels;
+        }
+
+        /**
+         * get the gravity
+         * @return the gravity
+         * @since 1.0.2
+         */
+        protected int getGravity() {
+            return Gravity.BOTTOM;
+        }
+
+        /**
+         * called on start which give a last chance to set Window.
+         * you can see a sample {@linkplain SimpleDialogCallback}
+         * @param window the window from dialog
+         * @param dm     the DisplayMetrics
+         */
+        public void onSetWindow(Window window, DisplayMetrics dm) {
+            if (canActivityReceiveEventOnOutside()) {
+                // Make us non-modal, so that others can receive touch events.
+                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+                // ...but notify us that it happened.
+                window.setFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
+            }
+            WindowManager.LayoutParams wlp = window.getAttributes();
+            wlp.width = getWidth(dm);
+            wlp.height = getWindowLayoutHeight(getActivity());
+            wlp.gravity = getGravity();
+            if (this.getDimAmount() >= 0) {
+                wlp.dimAmount = this.getDimAmount(); // default is 0.6f
+            }
+            window.setAttributes(wlp);
+        }
+        /**
          * called on back pressed. this is called before activity callback.
          * @return true handled back pressed.
          */
@@ -392,14 +495,6 @@ public class CommonDialogFragment extends DialogFragment {
          * @param dialog the dialog, often is an instance of {@link CommonDialog}.
          */
         public abstract void onSetDialog(Dialog dialog);
-
-        /**
-         * called on start which give a last chance to set Window.
-         * you can see a sample {@linkplain SimpleDialogCallback}
-         * @param window the window from dialog
-         * @param dm     the DisplayMetrics
-         */
-        public abstract void onSetWindow(Window window, DisplayMetrics dm);
 
         /**
          * bind the data for the view which is the content of fragment
