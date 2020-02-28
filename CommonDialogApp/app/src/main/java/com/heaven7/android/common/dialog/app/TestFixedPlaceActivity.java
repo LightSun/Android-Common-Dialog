@@ -3,8 +3,9 @@ package com.heaven7.android.common.dialog.app;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.heaven7.android.common.dialog.FixedPlaceHorizontalDialogManager;
 import com.heaven7.android.common.dialog.FixedPlaceVerticalDialogManager;

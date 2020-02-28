@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply from : '../androidx_compat.gradle'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -21,7 +22,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
 
     implementation project(":CommonDialog")
 

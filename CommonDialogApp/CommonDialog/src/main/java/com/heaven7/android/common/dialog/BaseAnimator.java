@@ -2,7 +2,6 @@ package com.heaven7.android.common.dialog;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -90,7 +89,7 @@ public abstract class BaseAnimator {
         playOn(view, 0, 0);
     }
 
-    public void playOn(View view, @Nullable ViewGroup.LayoutParams lp) {
+    public void playOn(View view, ViewGroup.LayoutParams lp) {
         if (lp == null) {
             playOn(view);
         } else {

@@ -6,12 +6,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
-import android.content.Context;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 /**
