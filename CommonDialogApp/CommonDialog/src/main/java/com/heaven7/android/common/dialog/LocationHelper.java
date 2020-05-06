@@ -100,7 +100,7 @@ public class LocationHelper {
                         break;
 
                     case GRAVITY_CENTER:
-                        x = cors[0] + width / 2 - placeView.getMeasuredWidth() / 2;
+                        x = cors[0] + width + locateOffset;
                         y = cors[1] + (height - placeViewHeight ) / 2;
                         break;
                     default:
@@ -308,6 +308,7 @@ public class LocationHelper {
         private int locateOffset; // > 0 means to bottom, < 0 means to top
         private byte gravity;
         private int gravityOffset;
+        /** the content view to position. */
         private View placeView;
         private View markView;
         /** auto fit edge or not .*/

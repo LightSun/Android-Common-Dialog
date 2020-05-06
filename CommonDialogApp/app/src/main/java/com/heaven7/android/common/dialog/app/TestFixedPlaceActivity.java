@@ -85,7 +85,7 @@ public class TestFixedPlaceActivity extends AppCompatActivity {
         public VerDialog() {
             super(new LocationHelper.Builder()
                             .setAutoFitEdge(true)
-                            .setLocate(LocationHelper.LOCATE_LEFT)
+                            .setLocate(LocationHelper.LOCATE_RIGHT)
                             .setGravity(LocationHelper.GRAVITY_CENTER)
                             .setRetainSpace(30)
                             .setStateBarHeight(CommonUtils.getStatusBarHeight(getApplicationContext()))
