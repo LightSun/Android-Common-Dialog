@@ -139,14 +139,15 @@ public class CommonDialogFragment extends DialogFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mCallback.onSaveInstanceState(outState);
-
         outState.putInt(KEY_LAYOUT_ID, mLayoutId);
-        outState.putParcelable(KEY_PARAMETER, mCallback.mParameter);
-        outState.putString(KEY_CALLBACK_CLASS, mCallback.getClass().getName());
-        /*if(!canCreateCallback()){
-            getStorage().save(mCallback, outState);
-        }*/
+        if(mCallback != null){
+            mCallback.onSaveInstanceState(outState);
+            outState.putParcelable(KEY_PARAMETER, mCallback.mParameter);
+            outState.putString(KEY_CALLBACK_CLASS, mCallback.getClass().getName());
+            /*if(!canCreateCallback()){
+                getStorage().save(mCallback, outState);
+            }*/
+        }
     }
 
     @Override
