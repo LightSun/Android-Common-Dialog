@@ -455,11 +455,13 @@ public class CommonDialogFragment extends DialogFragment {
             return getWidth(dm);
         }
         /**
+         * <p>Use {@linkplain #getWidth(Context, DisplayMetrics)} instead</p>
          * get window layout width actually
          * @param dm the display metrics
          * @return the layout width
          * @since 1.0.2
          */
+        @Deprecated
         protected int getWidth(DisplayMetrics dm) {
             return dm.widthPixels;
         }
