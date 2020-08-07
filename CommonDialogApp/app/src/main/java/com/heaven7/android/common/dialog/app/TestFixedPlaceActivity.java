@@ -34,7 +34,7 @@ public class TestFixedPlaceActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        /*SimpleDialogManager manager = mDialogs.pollLast();
+       /* SimpleDialogManager manager = mDialogs.pollLast();
         if(manager != null){
             manager.dismiss();
         }else {
