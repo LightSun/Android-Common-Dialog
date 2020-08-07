@@ -425,13 +425,34 @@ public class CommonDialogFragment extends DialogFragment {
         }
 
         /**
+         * <p>Use {@linkplain #getHeight(Context, DisplayMetrics)} instead</p>
          * get window layout height
          * @param context the context
          * @return the layout height
          * @since 1.0.2
          */
+        @Deprecated
         protected int getWindowLayoutHeight(Context context) {
             return WindowManager.LayoutParams.WRAP_CONTENT;
+        }
+
+        /**
+         * get the dialog height
+         * @param context the context
+         * @return the dialog window height
+         * @since 1.0.3
+         */
+        protected int getHeight(Context context, DisplayMetrics dm) {
+            return getWindowLayoutHeight(context);
+        }
+        /**
+         * get window layout width actually
+         * @param dm the display metrics
+         * @return the dialog width
+         * @since 1.0.3
+         */
+        protected int getWidth(Context context,DisplayMetrics dm) {
+            return getWidth(dm);
         }
         /**
          * get window layout width actually
@@ -466,8 +487,8 @@ public class CommonDialogFragment extends DialogFragment {
                 window.setFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
             }
             WindowManager.LayoutParams wlp = window.getAttributes();
-            wlp.width = getWidth(dm);
-            wlp.height = getWindowLayoutHeight(getActivity());
+            wlp.width = getWidth(getActivity(), dm);
+            wlp.height = getHeight(getActivity(), dm);
             wlp.gravity = getGravity();
             if (this.getDimAmount() >= 0) {
                 wlp.dimAmount = this.getDimAmount(); // default is 0.6f
